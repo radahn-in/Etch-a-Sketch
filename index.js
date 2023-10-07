@@ -7,37 +7,56 @@ function getRandomColor() {
 
 const container = document.querySelector('#container');
 
-const numRows = 16;
-const numCols = 16;
-
 let isHovering = false;
 
-for (let i = 0; i< (numRows * numCols); i++){
-    const gridItems = document.createElement('div');
-    gridItems.classList.add('grid-item');
-    
+function resizeGrid() {
+    const gridSize = parseInt(prompt('Enter the number of squares per side (max 100):', '16'),10);
 
-    gridItems.addEventListener('mouseover', function(event) {
-        if(event.buttons === 1){
-            isHovering = true;
-        }
 
-        if(isHovering) {
-            const gridItems = event.target;
-            const randomColor = getRandomColor();
-            gridItems.style.backgroundColor = randomColor;
-        }
-    });
+    if (isNaN(gridSize) || gridSize <= 0 || gridSize >100){
+        alert('please enter a valid number between 1 and 100.');
+        return;
+    }
 
-    gridItems.addEventListener('mouseout', function() {
-        isHovering = false;
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+
+    const itemWith = (960 - (gridSize - 1) * 2) / gridSize;
+
+    for (let i = 0; i< (gridSize * gridSize); i++){
+        const gridItems = document.createElement('div');
+        gridItems.classList.add('grid-item');
+        gridItems.style.width = `${itemWith}px`;
+        gridItems.style.height = `${itemWith}px`;
         
-    })
-
-
-
-    container.appendChild(gridItems);
+    
+        gridItems.addEventListener('mouseover', function(event) {
+            if(event.buttons === 1){
+                isHovering = true;
+            }
+    
+            if(isHovering) {
+                const gridItems = event.target;
+                const randomColor = getRandomColor();
+                gridItems.style.backgroundColor = randomColor;
+            }
+        });
+    
+        gridItems.addEventListener('mouseout', function() {
+            isHovering = false;
+            
+        })
+    
+        container.appendChild(gridItems);
+    }
 }
+
+document.getElementById('resizeGridButton').addEventListener('click', resizeGrid);
+
+resizeGrid();
+
+
 
 
 
